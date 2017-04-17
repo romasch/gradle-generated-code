@@ -18,3 +18,21 @@ class MyPlugin implements Plugin<Project> {
     }
 }
 ```
+
+## How to use it
+
+Currently the plugin is not published or registered anywhere. To use it locally:
+* git clone the repository
+* ./gradlew build install
+* In your own plugin, add the following to your build.gradle:
+```Gradle
+repositories {
+    mavenLocal()
+    // ...
+}
+
+dependencies {
+    compile 'ch.romasch.gradle:generated-code:1.0-SNAPSHOT'
+    // ...
+}
+```
