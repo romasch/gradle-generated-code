@@ -24,6 +24,11 @@ class GeneratedCodePlugin implements Plugin<Project> {
             }
         }
 
+        project.configurations {
+            genCompile.extendsFrom compile
+            genRunteim.extendsFrom runtime
+        }
+
         project.task(GENERATE_TASK,
                 group: CODE_GENERATION_TASK_GROUP,
                 description: 'Execute tasks that generate Java source code.') {

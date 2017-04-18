@@ -24,7 +24,7 @@ class FunctionalPluginTest {
             plugins {
                 id 'ch.romasch.gradle.generated-code'
             }
-            """
+            """.stripIndent()
     }
 
     @Test
@@ -53,7 +53,34 @@ class FunctionalPluginTest {
                 .withProjectDir(testProjectDir.root)
                 .withArguments(':build')
                 .withPluginClasspath()
-                .withDebug(true)
+                .build()
+
+        assertTrue("Task outcome should be successful", result.task(":build").outcome == SUCCESS)
+    }
+
+    @Test
+    void canAccessLibraries() {
+        buildFile << """
+            repositories {
+                mavenCentral()
+            }
+            dependencies {
+                compile "junit:junit:4.+"
+            }
+            """.stripIndent()
+
+        def genFolder = testProjectDir.newFolder('src', 'gen', 'java')
+        def generated = new File(genFolder,'Generated.java')
+        generated << "import org.junit.Test; public class Generated {}"
+
+        def mainFolder = testProjectDir.newFolder('src', 'main', 'java')
+        def real = new File(mainFolder, 'Real.java')
+        real << "public class Real { Generated generated; }"
+
+        def result = GradleRunner.create()
+                .withProjectDir(testProjectDir.root)
+                .withArguments(':build')
+                .withPluginClasspath()
                 .build()
 
         assertTrue("Task outcome should be successful", result.task(":build").outcome == SUCCESS)
